@@ -33,7 +33,7 @@ public class DBConnectionTest2 {
         // String user "jdbcuser";
         // String password = "jdbcuser";
 
-        // try (Connection conn = DriverManager.getConnection(url, user, password)){
+        // try (Connection conn1 = DriverManager.getConnection(url, user, password)){
         // System.out.println("DB 연결 성공");
         // } catch (Exception e) {
         // System.out.println("DB 연결 실패");

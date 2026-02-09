@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import domain.users.UserVO;
 
@@ -10,7 +11,7 @@ public interface Users {
     int userAdd(UserVO user);
 
     // 레코드 수정
-    int userMod(UserVO before, UserVO after);
+    int userMod(UserVO userVO);
 
     // 레코드 삭제
     int userDel(UserVO user);
@@ -20,7 +21,10 @@ public interface Users {
     List<UserVO> userAll();
 
     // 2. 조건 조회(userid(unique), name), email(unique 처리 안 해도 unique)
-    List<UserVO> userSerch(String userId, String userName);
+    // userID 또는 userName에 속한 레코드를 검색.
+    List<UserVO> userSearch(String userId, String userName);
 
-    List<UserVO> userSerch(String userEmail);
+    // email(unique 처리 안 해도 unique)
+    Optional<UserVO> userSearch(String userEmail);
+
 }

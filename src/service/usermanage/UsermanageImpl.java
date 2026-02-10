@@ -122,4 +122,11 @@ public class UsermanageImpl implements Usermanage {
             return false;
     }
 
+    @Override
+    public UserDTO login(String userId, String userPw) {
+        UserDTO userDTO = UserDTO.toUserDTO(
+                userRepository.login(userId, userPw).get());
+        return userDTO;
+    }
+
 }

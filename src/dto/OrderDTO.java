@@ -17,5 +17,4 @@ public class OrderDTO {
     private int price;
     private String date; // timestamp -> String
     private String userId;
-
 }

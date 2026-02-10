@@ -125,19 +125,19 @@ public class UsersDAOImpl implements Users {
     }
 
     @Override
-    public List<UserVO> userSearch(String userId, String userName) {
+    public Optional<UserVO> login(String userId, String userPw) {
         // sql select, where userId, userName
-        List<UserVO> list = new ArrayList<>();
+        Optional<UserVO> user = null;
         try (Connection conn = DBUtil.getConnection()) {
             // SQL
-            String sql = "select * from person where userId=? AND userName=?";
+            String sql = "select * from person where userId=? AND userPw=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userId);
-            pstmt.setString(2, userName);
+            pstmt.setString(2, userPw);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                list.add(UserVO.builder().id(rs.getInt("id"))
+                user = Optional.of(UserVO.builder().id(rs.getInt("id"))
                         .userId(rs.getString("userId"))
                         .userPw(rs.getString("userPw"))
                         .userName(rs.getString("userName"))
@@ -156,7 +156,7 @@ public class UsersDAOImpl implements Users {
             System.out.println("DB 작업 실패!!" + e.getMessage());
         }
 
-        return list;
+        return user;
     }
 
     @Override

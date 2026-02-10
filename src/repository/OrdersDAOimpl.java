@@ -120,7 +120,7 @@ public class OrdersDAOimpl implements Orders {
         try (Connection conn = DBUtil.getConnection()) {
             String sql = "select * from orders where userId = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "userId");
+            pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 list.add(OrdersVO.builder()

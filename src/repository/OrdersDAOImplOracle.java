@@ -1,7 +1,6 @@
 package repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,15 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.JSpinner.ListEditor;
-
-import com.mysql.cj.protocol.x.ResultMessageListener;
-
-import dbutil.DBInsertTest;
 import dbutil.DBUtil;
 import domain.orders.OrdersVO;
 
-public class OrdersDAOimpl implements Orders {
+public class OrdersDAOImplOracle implements Orders {
 
     @Override
     public boolean deleteOrder(long id) {
@@ -26,7 +20,7 @@ public class OrdersDAOimpl implements Orders {
         // 1. 삭제할 주문 읽기
         // 2. ID 값 넘기기
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "delete from orders where id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -42,16 +36,8 @@ public class OrdersDAOimpl implements Orders {
 
     @Override
     public boolean insertOrder(OrdersVO order) {
-        // 주문 추가
-        // 1. 주문 정보(order)
-        // 2. connection을 통한 SQL 실행
-        // 1) connerction 정보는 DBUtill.getConnection()
-        // 2) SQL 생성
-        // 3) PreparedStatement 객체 생성.
-        // 4) SQL을 완성...
-        // 5) 실행 결과 확인.
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "insert into orders (orderList, orderNum, price, userId)"
                     + "values(?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -71,15 +57,15 @@ public class OrdersDAOimpl implements Orders {
     @Override
     public boolean modifyOrder(OrdersVO order) {
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
-            String sql = "update orders set orderList=?, orderNum=?, price=?, date=? "
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
+            String sql = "update orders set orderList=?, orderNum=?, price=?, date=sysdate "
                     + " where id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, order.getOrderList());
             pstmt.setInt(2, order.getOrderNum());
             pstmt.setInt(3, order.getPrice());
-            pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-            pstmt.setLong(5, order.getId());
+            // pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            pstmt.setLong(4, order.getId());
             if (pstmt.executeUpdate() != 0) {
                 result = true;
             }
@@ -93,7 +79,7 @@ public class OrdersDAOimpl implements Orders {
     public List<OrdersVO> ordersList() {
         // 주문 전체 목록 보기
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "select * from orders";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -117,7 +103,7 @@ public class OrdersDAOimpl implements Orders {
     public List<OrdersVO> ordersSearch(String userId) {
         // 사용자 Id를 통한 주문 검색
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "select * from orders where userId = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userId);
@@ -128,7 +114,7 @@ public class OrdersDAOimpl implements Orders {
                         .orderList(rs.getString("orderList"))
                         .orderNum(rs.getInt("orderNum"))
                         .price(rs.getInt("price"))
-                        .date(rs.getTimestamp("date"))
+                        .date(rs.getTimestamp("orderDate"))
                         .userId(rs.getString("userId"))
                         .build());
             }
@@ -142,7 +128,7 @@ public class OrdersDAOimpl implements Orders {
     public Optional<OrdersVO> ordersSearch(int orderNum) {
         // 주문번호를 통한 검색
         Optional<OrdersVO> order = Optional.empty();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "select * from orders where orderNum = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, orderNum);
@@ -154,7 +140,7 @@ public class OrdersDAOimpl implements Orders {
                                 .orderList(rs.getString("orderList"))
                                 .orderNum(rs.getInt("orderNum"))
                                 .price(rs.getInt("price"))
-                                .date(rs.getTimestamp("date"))
+                                .date(rs.getTimestamp("orderDate"))
                                 .userId(rs.getString("userId"))
                                 .build());
             }
@@ -167,7 +153,7 @@ public class OrdersDAOimpl implements Orders {
     @Override
     public List<OrdersVO> ordersSearchDate(String date) {
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.ORACLE)) {
             String sql = "select * from orders where date>?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, date); // date는 simpleDateFormat을 이용한 날짜 형식의 문자열로

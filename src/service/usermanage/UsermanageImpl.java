@@ -7,13 +7,20 @@ import java.util.List;
 import domain.users.UserVO;
 import dto.UserDTO;
 import repository.Users;
-import repository.UsersDAOImpl;
+import repository.UsersDAOImplMariadb;
+import repository.UsersDAOImplOracle;
 
 public class UsermanageImpl implements Usermanage {
 
     // DB 작업을 할 수 있는 객체를 호출하여 작업 진행...
     // 인터페이스를 통한 객체 호출...
-    Users userRepository = new UsersDAOImpl();
+    // Users userRepository = new UsersDAOImpl();
+
+    // Oracle 객체로 변경
+    // Users userRepository = new UsersDAOImplOracle();
+
+    // Mariadb로 변경
+    Users userRepository = new UsersDAOImplMariadb();
 
     // stream 사용하여 한 줄로 줄여보기 (for ~ build()까지)
     @Override

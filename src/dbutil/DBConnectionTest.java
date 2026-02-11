@@ -13,7 +13,7 @@ public class DBConnectionTest {
         // 2. 데이터베이스 접속 테스트
         try {
             // 1. 드라이버 로드
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver"); // 오라클 드라이버
 
             // 2. 데이터베이스 접속 정보를 담은 Connection 객체 생성
             // jdbc:mysql:// -> jdbc로 mysql 접속
@@ -21,7 +21,7 @@ public class DBConnectionTest {
             // localhost -> 서버 주소. Dokcer에 현재 DB 서버가 있다.
             // :3306 -> 포트 번호 (mysql은 포트번호 3306을 기본 포트로 사용)
             // /jdbc -> DB 이름
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "jdbcuser", "jdbcuser");
+            conn = DriverManager.getConnection("jdbc:mariadb://localhost:4306/jdbc", "jdbcuser", "jdbcuser");
             System.out.println(conn);
             System.out.println("데이터베이스 접속 성공");
         } catch (ClassNotFoundException e) {

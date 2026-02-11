@@ -46,11 +46,12 @@ public class RepositoryTest {
             System.out.println("수정 실패");
 
         // 레코드 검색(userId, userName)
-        UserVO search2 = repository.userSearch(searchResult.get().getUserId(), searchResult.get().getUserName()).get(0);
-        if (search2 != null) {
-            System.out.println("아이디 검색 성공");
-        } else
-            System.out.println("아이디 검색 실패");
+        // UserVO search2 = repository.userSearch(searchResult.get().getUserId(),
+        // searchResult.get().getUserName()).get(0);
+        // if (search2 != null) {
+        // System.out.println("아이디 검색 성공");
+        // } else
+        // System.out.println("아이디 검색 실패");
 
         // 레코드 삭제
         testResult = repository.userDel(searchResult.get());

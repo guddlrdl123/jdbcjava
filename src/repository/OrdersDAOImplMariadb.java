@@ -1,7 +1,6 @@
 package repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,23 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.JSpinner.ListEditor;
-
-import com.mysql.cj.protocol.x.ResultMessageListener;
-
-import dbutil.DBInsertTest;
 import dbutil.DBUtil;
 import domain.orders.OrdersVO;
 
-public class OrdersDAOimpl implements Orders {
-
+public class OrdersDAOImplMariadb implements Orders {
     @Override
     public boolean deleteOrder(long id) {
         // 주문 삭제
         // 1. 삭제할 주문 읽기
         // 2. ID 값 넘기기
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "delete from orders where id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -51,7 +44,7 @@ public class OrdersDAOimpl implements Orders {
         // 4) SQL을 완성...
         // 5) 실행 결과 확인.
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "insert into orders (orderList, orderNum, price, userId)"
                     + "values(?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -71,7 +64,7 @@ public class OrdersDAOimpl implements Orders {
     @Override
     public boolean modifyOrder(OrdersVO order) {
         boolean result = false;
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "update orders set orderList=?, orderNum=?, price=?, date=? "
                     + " where id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -93,7 +86,7 @@ public class OrdersDAOimpl implements Orders {
     public List<OrdersVO> ordersList() {
         // 주문 전체 목록 보기
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "select * from orders";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -117,7 +110,7 @@ public class OrdersDAOimpl implements Orders {
     public List<OrdersVO> ordersSearch(String userId) {
         // 사용자 Id를 통한 주문 검색
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "select * from orders where userId = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userId);
@@ -142,7 +135,7 @@ public class OrdersDAOimpl implements Orders {
     public Optional<OrdersVO> ordersSearch(int orderNum) {
         // 주문번호를 통한 검색
         Optional<OrdersVO> order = Optional.empty();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "select * from orders where orderNum = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, orderNum);
@@ -167,7 +160,7 @@ public class OrdersDAOimpl implements Orders {
     @Override
     public List<OrdersVO> ordersSearchDate(String date) {
         List<OrdersVO> list = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getConnection(DBUtil.MARIADB)) {
             String sql = "select * from orders where date>?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, date); // date는 simpleDateFormat을 이용한 날짜 형식의 문자열로
@@ -187,5 +180,4 @@ public class OrdersDAOimpl implements Orders {
         }
         return list;
     }
-
 }

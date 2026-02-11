@@ -5,23 +5,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
-
 import domain.orders.OrdersVO;
 import domain.users.UserVO;
 import dto.OrderDTO;
 import dto.UserDTO;
 import repository.Orders;
-import repository.OrdersDAOimpl;
+import repository.OrdersDAOImplMariadb;
+import repository.OrdersDAOImplOracle;
 import repository.Users;
-import repository.UsersDAOImpl;
+import repository.UsersDAOImplMariadb;
+import repository.UsersDAOImplOracle;
 
 public class OrdermanageImpl implements Ordermanage {
 
     // 서비스 계층에 작업을 위해 필요한 객체들...
-    Users userRepository = new UsersDAOImpl();
-    Orders orderRepository = new OrdersDAOimpl();
+    // Users userRepository = new UsersDAOImpl();
+    // Orders orderRepository = new OrdersDAOimpl();
+
+    // Oracle DB 객체로
+    // Users userRepository = new UsersDAOImplOracle();
+    // Orders orderRepository = new OrdersDAOImplOracle();
+
+    // Mariadb 객체로
+    Users userRepository = new UsersDAOImplMariadb();
+    Orders orderRepository = new OrdersDAOImplMariadb();
 
     @Override
     public boolean createOrder(OrderDTO order, UserDTO userDTO) {
